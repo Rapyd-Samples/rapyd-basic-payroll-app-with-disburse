@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 const EmployeeSalaryForm = () => {
   const router = useRouter();
 
+  // List of countries for test purposes
   const countryCodes = [
     { code: 'US', name: 'United States (US)' },
     { code: 'GB', name: 'United Kingdom (GB)' },
@@ -16,17 +17,7 @@ const EmployeeSalaryForm = () => {
     { code: 'BR', name: 'Brazil (BR)' },
   ];
 
-  const CurrencyCodes = [
-    { code: 'USD' },
-    { code: 'GBP' },
-    { code: 'PHP' },
-    { code: 'CAD' },
-    { code: 'AUD' },
-    { code: 'EUR' },
-    { code: 'JPY' },
-    { code: 'BRL' },
-  ];
-
+  // Form data before submitting the form
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -41,16 +32,58 @@ const EmployeeSalaryForm = () => {
     idCardNumber: '',
     bankName: '',
     bankAccountNumber: '',
-    bankAccountCurrencyCode: '',
     salaryAmount: '',
     status: 'active',
   });
 
+  const [bankData, setbankData] = useState("false");
+  const [AvailableBanks, setAvailableBanks] = useState([]);
+
+  // Function to get the list of Rapyd-supported banks based on the selected country
+  const getCountryCodeBanks = async () => {
+    try {
+
+        fetch('/api/get-banks', {
+        method: 'POST',
+        body: JSON.stringify({
+          country: formData.countryCode,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        }
+        })
+        .then((response) => response.json())
+        .then((resJson) => {
+
+          var resData = resJson.data.body.data
+
+          var resDataArr = [];
+          resData.forEach(eachData => {
+            resDataArr.push({code: eachData.payout_method_type, name: eachData.name});
+          });
+
+          setAvailableBanks(resDataArr)
+
+        });
+
+      } catch (error) {
+        console.error("Error in API route");
+      }
+  };
+
+  // Function to update form data when data is inputted into any of the fields
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    if (formData.countryCode != '' && bankData == "false") {
+        getCountryCodeBanks();
+        setbankData("true")
+    }
+
   };
 
+  // Function to handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -78,18 +111,18 @@ const EmployeeSalaryForm = () => {
       idCardNumber: '',
       bankName: '',
       bankAccountNumber: '',
-      bankAccountCurrencyCode: '',
       salaryAmount: '',
       status: 'active',
     });
-
-    console.log('Form submitted:', formData);
     
+    // Redirect the user to the employee listing page
     router.push('/list-employees');
 
     window.alert('Employee added successfully');
   };
 
+
+  // Begin form styles
   const formContainerStyle = {
     maxWidth: '400px',
     margin: '0 auto',
@@ -113,8 +146,10 @@ const EmployeeSalaryForm = () => {
     margin: '20px 0',
     cursor: 'pointer',
   };
+  // End form styles
 
 
+  //Form fields
   return (
     <div style={formContainerStyle}>
         <form onSubmit={handleSubmit}>
@@ -185,22 +220,6 @@ const EmployeeSalaryForm = () => {
             </select>
         </label>
         <label>
-            Currency Code:
-            <select
-            name="bankAccountCurrencyCode"
-            value={formData.bankAccountCurrencyCode}
-            onChange={handleChange}
-            style={inputStyle}
-            >
-            <option value="">Select Currency Code</option>
-            {CurrencyCodes.map((currency, index) => (
-                <option key={index} value={currency.code}>
-                {currency.code}
-                </option>
-            ))}
-            </select>
-        </label>
-        <label>
             Company:
             <input
             type="text"
@@ -263,6 +282,11 @@ const EmployeeSalaryForm = () => {
             style={inputStyle}
           >
             <option value="">Select Bank</option>
+            {AvailableBanks.map((bank, index) => (
+                <option key={index} value={bank.code}>
+                {bank.name}
+                </option>
+            ))}
             {/* Get the list of available banks in the selected country from Rapyd */}
           </select>
         </label>
