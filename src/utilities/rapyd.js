@@ -1,8 +1,8 @@
 import https from 'https';
 import crypto from 'crypto';
 
-const secretKey = "rsk_a462c17bf279e91f30be11a6a5f78afac37bb0d02f96c0811863ecc64042994aeda628da1c2d42b5";
-const accessKey = "rak_0D97E77ECB660A803AA6";
+const secretKey = "{{YOUR_SECRET_KEY}}";
+const accessKey = "{{YOUR_ACCESS_KEY}}";
 
 const log = false;
 
@@ -33,7 +33,7 @@ async function makeRequest(method, urlPath, body = null) {
 
     return await httpRequest(options, body, log);
   } catch (error) {
-    console.error("Error generating request options");
+    console.error("Error generating request options", error);
     throw error;
   }
 }

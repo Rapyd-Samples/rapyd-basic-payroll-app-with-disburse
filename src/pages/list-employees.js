@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import EmployeeStatusToggle from '../components/EmployeeStatusToggle';
+import WalletDetails from '../components/WalletDetails';
+import PayOut from '../components/PayOut';
 
 const ListEmployees = () => {
   const [employeeData, setEmployeeData] = useState([]);
@@ -49,6 +51,7 @@ const ListEmployees = () => {
     <div style={containerStyle}>
       <Header />
       <h2>List of Employees</h2>
+      <WalletDetails />
       <table style={tableStyle}>
         <thead>
           <tr>
@@ -63,9 +66,9 @@ const ListEmployees = () => {
             <th style={thStyle}>ID Card Number</th>
             <th style={thStyle}>Bank Name</th>
             <th style={thStyle}>Bank Account Number</th>
-            <th style={thStyle}>Bank Account Currency Code</th>
             <th style={thStyle}>Salary Amount</th>
             <th style={thStyle}>Status</th>
+            <th style={thStyle}>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -82,12 +85,16 @@ const ListEmployees = () => {
               <td style={tdStyle}>{employee.idCardNumber}</td>
               <td style={tdStyle}>{employee.bankName}</td>
               <td style={tdStyle}>{employee.bankAccountNumber}</td>
-              <td style={tdStyle}>{employee.bankAccountCurrencyCode}</td>
               <td style={tdStyle}>{employee.salaryAmount}</td>
               <td style={tdStyle}>
                 <EmployeeStatusToggle
                   initialStatus={employee.status}
                   onToggle={(newStatus) => handleStatusToggle(index, newStatus)}
+                />  
+              </td>
+              <td style={tdStyle}>
+                <PayOut
+                  employee={employee}
                 />  
               </td>
             </tr>

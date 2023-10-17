@@ -36,17 +36,16 @@ const EmployeeSalaryForm = () => {
     status: 'active',
   });
 
-  const [bankData, setbankData] = useState("false");
   const [AvailableBanks, setAvailableBanks] = useState([]);
 
   // Function to get the list of Rapyd-supported banks based on the selected country
-  const getCountryCodeBanks = async () => {
+  const getCountryCodeBanks = async (value) => {
     try {
 
         fetch('/api/get-banks', {
         method: 'POST',
         body: JSON.stringify({
-          country: formData.countryCode,
+          country: value,
         }),
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
@@ -76,9 +75,8 @@ const EmployeeSalaryForm = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
-    if (formData.countryCode != '' && bankData == "false") {
-        getCountryCodeBanks();
-        setbankData("true")
+    if (name == 'countryCode') {
+        getCountryCodeBanks(value);
     }
 
   };
@@ -258,9 +256,11 @@ const EmployeeSalaryForm = () => {
             style={inputStyle}
           >
             <option value="">Select ID Type</option>
-            <option value="National ID">National ID</option>
-            <option value="Driver's License">Driver's License</option>
-            <option value="International Passport">International Passport</option>
+            <option value="social_security">Social Security</option>
+            <option value="work_permit">Work Permit</option>
+            <option value="international_passport">International Passport</option>
+            <option value="residence_permit">Residence Permit</option>
+            <option value="company_registered_number">company Registered Number</option>
           </select>
         </label>
         <label>
