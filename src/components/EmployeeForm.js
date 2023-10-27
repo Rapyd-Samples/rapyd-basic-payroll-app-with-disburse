@@ -17,7 +17,7 @@ const EmployeeSalaryForm = () => {
     { code: 'BR', name: 'Brazil (BR)' },
   ];
 
-  // Form data before submitting the form
+  // The form field data before submitting the form
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',

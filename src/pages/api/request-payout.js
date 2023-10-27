@@ -50,6 +50,7 @@ export default async function handler(req, res) { //Function to handle nextjs re
           "date_of_birth": "11/12/1913", //Your DOB
           "address": "1 Main Street", //Your Address
           "postcode": "12345", //Your Postcode
+          "country": "US",
           "city": "Anytown",//Your City
           "state": "NY",//Your State
           "purpose_code": "investment_income",

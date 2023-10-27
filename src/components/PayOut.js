@@ -22,7 +22,7 @@ const PayOut = ({ employee }) => {
           fetch('/api/complete-payout', {
           method: 'POST',
           body: JSON.stringify({
-              payourID: resData.id,
+              payoutID: resData.id,
               amount: resData.sender_amount,
           }),
           headers: {
@@ -55,7 +55,7 @@ const PayOut = ({ employee }) => {
           fetch('/api/confirm-payout', {
           method: 'POST',
           body: JSON.stringify({
-              payourID: resData.id,
+              payoutID: resData.id,
           }),
           headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -107,10 +107,37 @@ const PayOut = ({ employee }) => {
     
               var resData = resJson.data.body.data
 
-              if (resData.status == "Confirmation") {
-                condirmFXandCompletePayout(resData)
-              } else {
-                CompletePayout(resData)
+              switch (resData.status) {
+                case "Confirmation":
+                  condirmFXandCompletePayout(resData)
+                  break;
+                case "Created":
+                  CompletePayout(resData)
+                  break;
+                case "Hold":
+                  setPayoutText("Hold")
+                  break;
+                case "Expired":
+                  setPayoutText("Expired")
+                  break;
+                case "Pending":
+                  setPayoutText("Pending")
+                  break;
+                case "Canceled":
+                  setPayoutText("Canceled")
+                  break;
+                case "Completed":
+                  setPayoutText("Paid")
+                  break;
+                case "Declined":
+                  setPayoutText("Declined")
+                  break;
+                case "Error":
+                  setPayoutText("Error")
+                  break;
+                default:
+                  setPayoutText("Error")
+                  break;
               }
     
               console.log("request-payout", resData)

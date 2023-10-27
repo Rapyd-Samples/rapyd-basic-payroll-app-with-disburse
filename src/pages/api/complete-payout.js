@@ -3,10 +3,10 @@ import { makeRequest } from '../../utilities/rapyd.js'; // Import Rapyd base fun
 export default async function handler(req, res) { //Function to handle nextjs request
 
   // Set the Rapyd API URL
-  const payourID = req.body.payourID;
+  const payoutID = req.body.payoutID;
   const amount = req.body.amount
 
-  const url = '/v1/payouts/complete/'+payourID+'/'+amount; 
+  const url = '/v1/payouts/complete/'+payoutID+'/'+amount; 
 
   
   //Make the API request to Rapyd
